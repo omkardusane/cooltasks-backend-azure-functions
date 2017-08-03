@@ -1,0 +1,11 @@
+{
+  "name": "afcta",
+  "version": "1.0.0",
+  "description": "Azure functions Tasks app (a todo list)",
+  "author": "Omkar Dusane (omkardusane@gmail.com)",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "mongodb": "^2.2.30"
+  }
+}

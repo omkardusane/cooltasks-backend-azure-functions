@@ -1,40 +1,34 @@
+let getDb = require('../Commons/db');
+let helpers = require('../Commons/helpers');
+
 module.exports = function (context, req) {
     context.log('Get All');
-    
-    require('../Commons/UserService')(context, req, function(){
-        let owner = req.username ; // this is the user
+    require('../Commons/UserService')(context, req, function () {
+        let owner = req.username; // this is the user
         // find all the tasks of this user from the db
-        context.res = {
-            status: 200,
-            body: 
-            { 
-                ok:true,
-                message: "Here's the list of tasks",
-                tasks:[
-                    {
-                        "_id": "597b8dc323e70f13546a87b4",
-                        "what": "eat kiwi",
-                        "due": "18/07/2018",
-                        "pending": true,
-                        "createdOn": 1501269443472
-                    },
-                    {
-                        "_id": "597b8dc323e70f13546a87b5",
-                        "what": "eat apples",
-                        "due": "18/07/2018",
-                        "pending": true,
-                        "createdOn": 1501267443472
-                    },
-                    {
-                        "_id": "597b8dc323e70f13546a97b5",
-                        "what": "eat Bananas",
-                        "due": "18/07/2018",
-                        "pending": false,
-                        "createdOn": 1501267443472
-                    }
-                ]
-            }
-        };
-        context.done();
+        getDb(function (db) {
+            db.tasks.find({ owner: owner }, {
+                _id: 1,
+                what: 1,
+                due: 1,
+                createdOn: 1,
+                updatedOn: 1,
+                owner: 1,
+                pending: 1
+            }).toArray(function (err1, docs) {
+                if (!err1) {
+                    let list = docs.map(doc=> {
+                        doc._id = doc._id.toString();
+                        return doc;
+                    });
+                    helpers.respondOk(context, {
+                        message: 'here are all the tasks',
+                        tasks: list
+                    });
+                } else {
+                    helpers.respondError(context, "Could not find anything");
+                }
+            });
+        });
     });
 };
