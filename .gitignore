@@ -1,1 +1,4 @@
 node_modules
+cooltasksapp.csproj
+local.settings.json
+web.config
